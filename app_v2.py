@@ -709,9 +709,9 @@ if uploaded_file:
             
                 # Бегунок для выбора уровня значимости хи-квадрат
                 alpha_chi2 = st.slider(
-                    "Уровень значимости для теста Хи-квадрат (chi²)",
+                    "Уровень значимости для теста Хи-квадрат",
                     min_value=0.01,
-                    max_value=0.20,
+                    max_value=0.10,
                     value=0.05,
                     step=0.01,
                     format="%.2f"
@@ -721,27 +721,27 @@ if uploaded_file:
                 alpha_z = st.slider(
                     "Уровень значимости для z-теста пропорций",
                     min_value=0.01,
-                    max_value=0.20,
+                    max_value=0.10,
                     value=0.05,
                     step=0.01,
                     format="%.2f"
                 )
 
-            # Выбор поправки на множественные сравнения
-            adjustment_method = st.selectbox(
-                "Метод поправки на множественные сравнения",
-                options=[
-                    "holm",
-                    "bonferroni",
-                    "fdr_bh",
-                    "Без поправок"
-                ],
-                index=0
-            )
+                # Выбор поправки на множественные сравнения
+                adjustment_method = st.selectbox(
+                    "Метод поправки на множественные сравнения",
+                    options=[
+                        "holm",
+                        "bonferroni",
+                        "fdr_bh",
+                        "Без поправок"
+                    ],
+                    index=0
+                )
             # Преобразуем "None" в None
             adjustment_type = None if adjustment_method == "Без поправок" else adjustment_method
 
-            result = create_crosstab(col, col2, adjustment_method, alpha_chi2, alpha_z)
+            result = create_crosstab(col, col2, adjustment_type, alpha_chi2, alpha_z)
             
             st.subheader(f'🧾 Таблица сопряженности между {col} и {col2}')
             
