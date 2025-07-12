@@ -717,7 +717,7 @@ if uploaded_file:
             notes = result['notes'].strip().split("\n")
             note_blocks = {
             "Тест хи-квадрат": [],
-            "Z-теста пропорций": [],
+            "Z-тест пропорций": [],
             "Примечание к таблице": []
             }
             
