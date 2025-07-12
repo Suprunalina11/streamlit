@@ -658,7 +658,7 @@ if uploaded_file:
                             if corr_pvalue < z_threshhold:
                                 significant_groups[(group, answer)] = zstat
                                 detailed_results.append(f'''
-                {group} vs остальные в ответе '{answer}': p = {smart_format(corr_pvalue)}*''')
+                {group} vs остальные в ответе '{answer}': p = {smart_format(corr_pvalue)}''')
 
                 if len(detailed_results) > 0:
                     z_notes = f'''
