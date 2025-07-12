@@ -705,7 +705,7 @@ if uploaded_file:
 
             result = create_crosstab(col, col2)
             
-            st.subheader(f"📊 Таблица сопряженности между {col1} и {col2}")
+            st.subheader(f'📊 Таблица сопряженности между {col} и {col2}')
             
             # Преобразуем Styler в HTML, чтобы избежать прокрутки
             st.markdown(result['table'].to_html(), unsafe_allow_html=True)
