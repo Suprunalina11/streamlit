@@ -566,7 +566,7 @@ if uploaded_file:
             def smart_format(x, precision=4):
                 return f"{x:.{precision}f}" if abs(x) >= 0.0001 else f"{x:.2e}"
 
-            def create_crosstab(col1, col2, adjustment_type = 'holm', chi2_threshhold = 0.1, z_threshhold = 0.05, min_n_obs = 10):
+            def create_crosstab(col1, col2, adjustment_type = 'holm', chi2_threshhold = 0.05, z_threshhold = 0.05, min_n_obs = 10):
 
                 """
                 Создает таблицу сопряженности между двумя переменными и выполняет двухэтапный статистический анализ:
@@ -719,7 +719,7 @@ if uploaded_file:
             
                 # Бегунок для выбора уровня значимости z-теста
                 alpha_z = st.slider(
-                    "Порог для z-теста пропорций",
+                    "Уровень значимости для z-теста пропорций",
                     min_value=0.01,
                     max_value=0.20,
                     value=0.05,
@@ -733,7 +733,7 @@ if uploaded_file:
                 options=[
                     "holm",
                     "bonferroni",
-                    "fdr_bh"
+                    "fdr_bh",
                     "Без поправок"
                 ],
                 index=0
