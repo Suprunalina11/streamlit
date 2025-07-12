@@ -562,6 +562,9 @@ if uploaded_file:
                 if series.name in meta.variable_value_labels:
                     return series.map(lambda x: meta.variable_value_labels[series.name].get(x, x))
                 return series
+            
+            def smart_format(x, precision=4):
+                return f"{x:.{precision}f}" if abs(x) >= 0.0001 else f"{x:.{precision}e}"
 
             def create_crosstab(col1, col2, adjustment_type = 'holm', chi2_threshhold = 0.1, z_threshhold = 0.05, min_n_obs = 10):
 
@@ -655,7 +658,7 @@ if uploaded_file:
                             if corr_pvalue < z_threshhold:
                                 significant_groups[(group, answer)] = zstat
                                 detailed_results.append(f'''
-                {group} vs остальные в ответе '{answer}': p = {corr_pvalue}*''')
+                {group} vs остальные в ответе '{answer}': p = {smart_format(corr_pvalue)}*''')
 
                 if len(detailed_results) > 0:
                     z_notes = f'''
