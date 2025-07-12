@@ -707,8 +707,19 @@ if uploaded_file:
             col2 = meta_inside_out[question2]
 
             result = create_crosstab(col, col2)
-            st.table(result['table'])
-            st.write(result['notes'])
+            
+            # Создание оформленного окна с результатами
+            with st.container():
+                st.subheader("📊 Результаты анализа таблицы сопряженности")
+            
+                # Вывод таблицы
+                st.markdown("#### Таблица с выделением статистически значимых отличий")
+                st.dataframe(result['table'], use_container_width=True)
+            
+                # Красиво отформатированные примечания
+                st.markdown("---")
+                st.markdown("#### 📌 Интерпретация результатов")
+                st.markdown(f"<div style='background-color: #f9f9f9; padding: 1em; border-radius: 10px;'>{result['notes'].replace(chr(10), '<br>')}</div>", unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"Ошибка: {str(e)}")
