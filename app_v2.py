@@ -708,18 +708,45 @@ if uploaded_file:
 
             result = create_crosstab(col, col2)
             
-            # Создание оформленного окна с результатами
-            with st.container():
-                st.subheader("📊 Результаты анализа таблицы сопряженности")
-            
-                # Вывод таблицы
-                st.markdown("#### Таблица с выделением статистически значимых отличий")
-                st.dataframe(result['table'], use_container_width=True)
-            
-                # Красиво отформатированные примечания
-                st.markdown("---")
-                st.markdown("#### 📌 Интерпретация результатов")
-                st.markdown(f"<div style='background-color: #f9f9f9; padding: 1em; border-radius: 10px;'>{result['notes'].replace(chr(10), '<br>')}</div>", unsafe_allow_html=True)
+            st.markdown("Таблица сопряженности между ")
 
+            # Преобразуем Styler в HTML, чтобы избежать прокрутки
+            st.markdown(result['table'].to_html(), unsafe_allow_html=True)
+            
+            # 2. Структурируем текстовые комментарии
+            st.markdown("---")
+            st.subheader("📋 Интерпретация результатов")
+            
+            # Разбиваем текст на логические части по ключевым словам
+            notes = result['notes'].strip().split("\n")
+            note_blocks = {
+            "Результаты хи-квадрат": [],
+            "Результаты z-теста": [],
+            "Примечание к таблице": [],
+            "Расшифровка вопросов": []
+            }
+            
+            current_block = None
+            for line in notes:
+                line = line.strip()
+                if not line:
+                    continue
+                if "Хи-квадрат" in line:
+                    current_block = "Результаты хи-квадрат"
+                elif "z-тест" in line:
+                    current_block = "Результаты z-теста"
+                elif "Примечание к таблице" in line:
+                    current_block = "Примечание к таблице"
+                elif "Расшифровка вопросов" in line:
+                    current_block = "Расшифровка вопросов"
+                if current_block:
+                    note_blocks[current_block].append(line)
+            
+            # Отображаем каждый блок
+            for title, lines in note_blocks.items():
+                if lines:
+                    with st.expander(f"🔹 {title}", expanded=True):
+                        for line in lines:
+                            st.markdown(f"- {line}")
     except Exception as e:
         st.error(f"Ошибка: {str(e)}")
