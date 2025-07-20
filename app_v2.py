@@ -696,7 +696,6 @@ if uploaded_file:
                  Если доля группы ниже всех остальных, ячейки выделены розовым цветом, если доля группы выше - фиолетовым.
                 {f"Тесты учитывают поправку на множественные сравнения методом {adjustment_type}" if adjustment_type else 'Тесты не корректируются поправкой на множественные сравнения'}
                 ''' + f'''
-                Расшифровка вопросов:
                 {col} - {meta.column_names_to_labels[col]}
                 {col2} - {meta.column_names_to_labels[col2]}
                 '''
@@ -713,7 +712,7 @@ if uploaded_file:
             
                 # Бегунок для выбора уровня значимости хи-квадрат
                 alpha_chi2 = st.slider(
-                    "Уровень значимости для теста Хи-квадрат",
+                    "Уровень значимости для теста Хи-квадрат, %",
                     min_value= 1,
                     max_value= 10,
                     value= 5,
@@ -722,7 +721,7 @@ if uploaded_file:
             
                 # Бегунок для выбора уровня значимости z-теста
                 alpha_z = st.slider(
-                    "Уровень значимости для z-теста пропорций",
+                    "Уровень значимости для z-теста пропорций, %",
                     min_value= 1,
                     max_value= 10,
                     value= 5,
@@ -763,7 +762,8 @@ if uploaded_file:
             note_blocks = {
             "Тест хи-квадрат": [],
             "Z-тест пропорций": [],
-            "Примечание к таблице": []
+            "Примечание к таблице": [],
+            "Расшифровка вопросов": []
             }
             
             current_block = None
@@ -777,6 +777,8 @@ if uploaded_file:
                     current_block = "Z-тест пропорций"
                 elif "Значения нормированы" in line:
                     current_block = "Примечание к таблице"
+                elif col in line:
+                    current_block = "Расшифровка вопросов"
                 if current_block:
                     note_blocks[current_block].append(line)
             
