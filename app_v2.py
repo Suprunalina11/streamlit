@@ -662,7 +662,7 @@ if uploaded_file:
                 if chi_valid  & (len(detailed_results) > 0):
                     z_notes = f'''
                 Согласно z-тесту пропорций, отдельные группы демонстрируют статистически значимое отличие по доле ответов на конкретные вопросы относительно всех остальных. В частности: {"".join(detailed_results)}'''
-                elif chi_valid  & (len(detailed_results) = 0):
+                elif chi_valid  & (len(detailed_results) == 0):
                     z_notes = f'''
                 Согласно z-тесту пропорций, статистически значимых отличий на уровне отдельных групп нет.'''
                 elif chi_valid == False:
