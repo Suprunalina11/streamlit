@@ -620,52 +620,52 @@ if uploaded_file:
                     chi2_valid = True
 
                 # Шаг 3: Проведение z-теста для проверки значимости различий каждой группы против всех остальных
-
-                significant_groups = {}
-                detailed_results = []
-
-                for answer in contingency_table.index:
-                    z_pvalues = []
-                    comparisons = []
-                    group_labels = list(contingency_table.columns)
-
-                    for group in group_labels:
-                        group_success = contingency_table.loc[answer, group]
-                        rest_success = contingency_table.loc[answer, :].sum() - group_success
-
-                        group_nobs = contingency_table.loc[:, group].sum()
-                        rest_nobs = contingency_table.sum().sum() - group_nobs
-
-                        # Проверка достаточности наблюдений
-                        if min([group_success, group_nobs - group_success, rest_success, rest_nobs - rest_success]) <= min_n_obs:
-                            continue
-
-                        success = [group_success, rest_success]
-                        nobs = [group_nobs, rest_nobs]
-
-                        zstat, pvalue = proportions_ztest(success, nobs)
-                        z_pvalues.append(pvalue)
-                        comparisons.append((group, answer, pvalue, zstat))
-
-                    # Поправка на множественные сравнения внутри одного ответа
-                    if z_pvalues:
-                        if adjustment_type:
-                            _, corr_pvalues, _, _ = multipletests(z_pvalues, method = adjustment_type)
-                        else:
-                            corr_pvalues = z_pvalues
-
-                        for (group, answer, _, zstat), corr_pvalue in zip(comparisons, corr_pvalues):
-                            if corr_pvalue < z_threshhold:
-                                significant_groups[(group, answer)] = zstat
-                                detailed_results.append(f'''
-                {group} vs остальные в ответе '{answer}': p = {smart_format(corr_pvalue)}''')
-
-                if len(detailed_results) > 0:
-                    z_notes = f'''
-                Согласно z-тесту пропорций, отдельные группы демонстрируют статистически значимое отличие по доле ответов на конкретные вопросы относительно всех остальных. В частности: {"".join(detailed_results)}'''
-                else:
-                    z_notes = f'''
-                Согласно z-тесту пропорций, статистически значимых отличий на уровне отдельных групп нет.'''
+   
+                    significant_groups = {}
+                    detailed_results = []
+    
+                    for answer in contingency_table.index:
+                        z_pvalues = []
+                        comparisons = []
+                        group_labels = list(contingency_table.columns)
+    
+                        for group in group_labels:
+                            group_success = contingency_table.loc[answer, group]
+                            rest_success = contingency_table.loc[answer, :].sum() - group_success
+    
+                            group_nobs = contingency_table.loc[:, group].sum()
+                            rest_nobs = contingency_table.sum().sum() - group_nobs
+    
+                            # Проверка достаточности наблюдений
+                            if min([group_success, group_nobs - group_success, rest_success, rest_nobs - rest_success]) <= min_n_obs:
+                                continue
+    
+                            success = [group_success, rest_success]
+                            nobs = [group_nobs, rest_nobs]
+    
+                            zstat, pvalue = proportions_ztest(success, nobs)
+                            z_pvalues.append(pvalue)
+                            comparisons.append((group, answer, pvalue, zstat))
+    
+                        # Поправка на множественные сравнения внутри одного ответа
+                        if z_pvalues:
+                            if adjustment_type:
+                                _, corr_pvalues, _, _ = multipletests(z_pvalues, method = adjustment_type)
+                            else:
+                                corr_pvalues = z_pvalues
+    
+                            for (group, answer, _, zstat), corr_pvalue in zip(comparisons, corr_pvalues):
+                                if corr_pvalue < z_threshhold:
+                                    significant_groups[(group, answer)] = zstat
+                                    detailed_results.append(f'''
+                    {group} vs остальные в ответе '{answer}': p = {smart_format(corr_pvalue)}''')
+    
+                    if len(detailed_results) > 0:
+                        z_notes = f'''
+                    Согласно z-тесту пропорций, отдельные группы демонстрируют статистически значимое отличие по доле ответов на конкретные вопросы относительно всех остальных. В частности: {"".join(detailed_results)}'''
+                    else:
+                        z_notes = f'''
+                    Согласно z-тесту пропорций, статистически значимых отличий на уровне отдельных групп нет.'''
 
                 # Шаг 4: Создаем таблицу сопряженности для отображения в строке вывода
                 crosstab_to_show = pd.crosstab(transformed_col1,
@@ -724,22 +724,27 @@ if uploaded_file:
                     max_value=0.10,
                     value=0.05,
                     step=0.01,
-                    format="%.2f"
+                    format="%.2%"
                 )
 
                 # Выбор поправки на множественные сравнения
                 adjustment_method = st.selectbox(
                     "Метод поправки на множественные сравнения",
                     options=[
-                        "holm",
-                        "bonferroni",
-                        "fdr_bh",
+                        "Холма",
+                        "Бонферрони",
+                        "Беньямини-Хохберга",
                         "Без поправок"
                     ],
                     index=0
                 )
-            # Преобразуем "None" в None
-            adjustment_type = None if adjustment_method == "Без поправок" else adjustment_method
+
+            adjustment_dict = {"Холма": "holm",
+                        "Бонферрони": "bonferroni",
+                        "Беньямини-Хохберга": "fdr_bh",
+                        "Без поправок": None}
+                        
+            adjustment_type = adjustment_dict[adjustment_method]
 
             result = create_crosstab(col, col2, adjustment_type, alpha_chi2, alpha_z)
             
