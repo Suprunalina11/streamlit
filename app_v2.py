@@ -680,7 +680,7 @@ if uploaded_file:
 
                 def highlight_significant_groups(value, index, column):
                     if (column, index) in significant_groups:
-                        return 'background-color: #4C269E' if significant_groups[(column, index)] > 0 else 'background-color: #F91E7F'
+                        return 'background-color: #12AFFF' if significant_groups[(column, index)] > 0 else 'background-color: #F91E7F'
                     return ''
 
                 # Применяем стили к таблице
