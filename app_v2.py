@@ -680,7 +680,7 @@ if uploaded_file:
 
                 def highlight_significant_groups(value, index, column):
                     if (column, index) in significant_groups:
-                        return 'background-color: #7B68EE' if significant_groups[(column, index)] > 0 else 'background-color: #ffc0cb'
+                        return 'background-color: #4C269E' if significant_groups[(column, index)] > 0 else 'background-color: #F91E7F'
                     return ''
 
                 # Применяем стили к таблице
@@ -695,7 +695,7 @@ if uploaded_file:
                  Значения нормированы по столбцам и представлены в %.
                  Цветом подсвечены ячейки, в которых наблюдаемые значения статистически отличаются от остальных групп (p < {z_threshhold}).
                  Если доля группы ниже всех остальных, ячейки выделены розовым цветом, если доля группы выше - фиолетовым.
-                {f"Тесты учитывают поправку на множественные сравнения методом {adjustment_type}" if adjustment_type else 'Тесты не корректируются поправкой на множественные сравнения'}
+                {f"Тесты учитывают поправку на множественные сравнения методом {adjustment_method}" if adjustment_type else 'Тесты не корректируются поправкой на множественные сравнения'}
                 ''' + f'''
                 {col} - {meta.column_names_to_labels[col]}
                 {col2} - {meta.column_names_to_labels[col2]}
